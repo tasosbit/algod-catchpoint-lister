@@ -7,7 +7,7 @@ function die(...args) { console.error(...args); process.exit(1); }
 
 function readDirectory(path) {
   try {
-    return readdirSync(path);
+    return readdirSync(path, { recursive: true });
   } catch(e) {
     die(`While reading ${path}: ${e.message}`);
   }
@@ -23,21 +23,15 @@ let errors = [];
 const labels = [];
 
 const catchpointsPath = join(networkDataDirectory, 'catchpoints');
-for(const level1 of readDirectory(catchpointsPath)) {
-  const level2 = join(catchpointsPath, level1);
-  for(const path of readDirectory(level2)) {
-    const level3 = join(level2, path);
-    for(const path of readDirectory(level3)) {
-      const filename = join(level3, path);
-      if (filename.endsWith('.catchpoint')) {
-        try {
-          labels.push(
-            await processCatchpoint(filename)
-          );
-        } catch(e) {
-          errors.push(e);
-        }
-      }
+for(const path of readDirectory(catchpointsPath)) {
+  if (path.endsWith('.catchpoint')) {
+    try {
+      const filename = join(catchpointsPath, path);
+      labels.push(
+        await processCatchpoint(filename)
+      );
+    } catch(e) {
+      errors.push(e);
     }
   }
 }
