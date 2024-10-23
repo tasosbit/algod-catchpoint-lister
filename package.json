@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "algo-msgpack-with-bigint": "^2.1.1",
+    "tar": "^7.4.3"
+  },
+  "type": "module"
+}
