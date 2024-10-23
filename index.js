@@ -13,24 +13,16 @@ function readDirectory(path) {
   }
 }
 
-const { ALGORAND_DATA } = process.env;
-const networkId = process.argv[2];
+const networkDataDirectory = process.argv[2];
 
-if (!ALGORAND_DATA) {
-  die(`Please set the ALGORAND_DATA environment variable to the data directory, e.g. /var/lib/algorand/mainnet-v1.0`);
+if (!networkDataDirectory) {
+  die(`Please provide network data directory as the first argument. E.g. /var/lib/algorand/fnet-v1`);
 }
-
-if (!networkId) {
-  die(`Please provide network ID as the first argument`);
-}
-
-console.warn('Using', { ALGORAND_DATA, networkId });
 
 let errors = [];
 const labels = [];
 
-const networkPath = join(ALGORAND_DATA, networkId);
-const catchpointsPath = join(networkPath, 'catchpoints');
+const catchpointsPath = join(networkDataDirectory, 'catchpoints');
 for(const level1 of readDirectory(catchpointsPath)) {
   const level2 = join(catchpointsPath, level1);
   for(const path of readDirectory(level2)) {
